@@ -1,0 +1,61 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+
+
+model Room{
+  id String @id @default(uuid())
+  name String
+  price Decimal
+  description String
+  availability Boolean @default(true)
+  images Image[]
+  reviews Review[]
+  reservation Reservation[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Image{
+   id String @id @default(uuid())
+   roomId String
+   room Room @relation(fields: [roomId],references: [id],onDelete: Cascade) 
+   url String
+   createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+}
+
+model Review{
+   id String @id @default(uuid())
+   roomId String 
+   comment String
+   room Room @relation(fields: [roomId],references: [id],onDelete: Cascade) 
+   createdAt DateTime @default(now())
+   updatedAt DateTime @updatedAt
+}
+
+model Reservation{
+  id String @id @default(uuid())
+  name String
+  phone String
+  isPaid Boolean @default(false)
+  email String?
+  roomId String
+  room Room @relation(fields: [roomId],references: [id])
+  startDate DateTime
+  endDate DateTime
+  totalPrice String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
