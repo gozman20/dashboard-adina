@@ -63,3 +63,25 @@ export async function DELETE(
     console.log(err);
   }
 }
+
+export async function GET(
+  req: Request,
+  { params }: { params: { roomId: string } }
+) {
+  try {
+    console.log("api room id");
+    if (!params.roomId) return new NextResponse("No id found");
+
+    const room = await prismadb.room.findUnique({
+      where: {
+        id: params.roomId,
+      },
+      include: {
+        images: true,
+      },
+    });
+    return NextResponse.json(room);
+  } catch (err) {
+    console.log(err);
+  }
+}

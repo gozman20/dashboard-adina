@@ -21,7 +21,8 @@ model Room{
   availability Boolean @default(true)
   images Image[]
   reviews Review[]
-  reservation Reservation[]
+  bookedRoom BookedRoom[]
+  // reservation Reservation[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
@@ -47,15 +48,26 @@ model Review{
 
 model Reservation{
   id String @id @default(uuid())
-  name String
-  phone String
+  name String?  @default("")
+  phone String  @default("")
   isPaid Boolean @default(false)
-  email String?
-  roomId String
-  room Room @relation(fields: [roomId],references: [id])
+  email String  @default("")
+  address String @default("")
+  // roomId String
+  // room Room @relation(fields: [roomId],references: [id])
+  bookedRoom BookedRoom[] 
   startDate DateTime
   endDate DateTime
   totalPrice String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model BookedRoom{
+ id    String  @id @default(uuid())
+roomId String  // Foreign Key to Product
+room   Room @relation(fields: [roomId], references: [id])
+reservationId   String  // Foreign Key to Order
+reservation     Reservation   @relation(fields: [reservationId], references: [id])
+
 }

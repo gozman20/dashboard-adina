@@ -15,7 +15,7 @@ export type ReservationColumn = {
 
 export const columns: ColumnDef<ReservationColumn>[] = [
   {
-    accessorKey: "room",
+    accessorKey: "roomNumber",
     header: "Room No",
   },
   {
@@ -30,6 +30,15 @@ export const columns: ColumnDef<ReservationColumn>[] = [
   {
     accessorKey: "totalPrice",
     header: "Total price",
+    cell: ({ row }) => {
+      const price = parseFloat(row.getValue("totalPrice"));
+      const formatted = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      }).format(price);
+
+      return <div className=" font-medium">{formatted}</div>;
+    },
   },
   {
     accessorKey: "startDate",

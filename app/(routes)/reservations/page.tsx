@@ -1,14 +1,13 @@
 import React from "react";
 import { ReservationClient } from "./components/ReservationClient";
 import prismadb from "@/lib/prismadb";
+import { format } from "date-fns";
 
 const ReservationPage = async () => {
   const reservation = await prismadb.reservation.findMany({
     include: {
-      room: {
-        select: {
-          name: true,
-        },
+      bookedRoom: {
+        include: { room: true },
       },
     },
   });
@@ -17,10 +16,11 @@ const ReservationPage = async () => {
     id: item.id,
     name: item.name,
     phone: item.phone,
+
     isPaid: item.isPaid,
-    roomNumber: item.room.name,
-    startDate: item.startDate.toISOString(),
-    endDate: item.endDate.toISOString(),
+    roomNumber: item.bookedRoom.map((item) => item.room.name).join(", "),
+    startDate: format(item.startDate, "do, MMMM,yyyy"),
+    endDate: format(item.endDate, "do, MMMM,yyyy"),
     totalPrice: item.totalPrice,
   }));
   return (
